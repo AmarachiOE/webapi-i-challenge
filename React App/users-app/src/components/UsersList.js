@@ -6,7 +6,7 @@ const UsersList = props => {
       <h1>List of Users:</h1>
       {props.users.map(user => (
         <div key={user.id}>
-          <h3 >{user.name}</h3>
+          <h3>{user.name}</h3>
           <p>{user.bio}</p>
         </div>
       ))}

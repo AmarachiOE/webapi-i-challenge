@@ -8,30 +8,25 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      users: [],
+      users: []
     };
-  };
+  }
 
-   // GET data -- GET REQUEST
-   componentDidMount() {
-    // visit http://localhost:5000/friends to look at data being requested
-    axios.get("http://localhost:5000/api/users")
-      .then(res => {
-        console.log(res.data);
-        this.setState({ users: res.data });
-      });
-  };
-
+  // GET data
+  componentDidMount() {
+    axios.get("http://localhost:5000/api/users").then(res => {
+      console.log(res.data);
+      this.setState({ users: res.data });
+    });
+  }
 
   render() {
     return (
       <div className="App">
-        <p>Inside App</p>
-        <UsersList users={this.state.users}/>
+        <UsersList users={this.state.users} />
       </div>
     );
   }
-  
 }
 
 export default App;
