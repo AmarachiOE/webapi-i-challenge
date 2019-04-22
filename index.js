@@ -21,7 +21,22 @@ server.get("/api/users", (req, res) => {
 });
 
 // GET USER BY ID
-
+server.get("/api/users/:id", (req, res) => {
+    const userId = req.params.id;
+    if (!userId) {
+        console.log("No user with that ID.");
+        return res.status(404).json({ errorMessage: "The user with the specified ID does not exist." })
+    }
+    db.findById(userId)
+        .then(user => {
+        res.status(200).json(user);
+    })
+        .catch(err => {
+        res
+          .status(500)
+          .json({ error: "The user information could not be retrieved." });
+      });
+})
 
 // POST NEW USER
 server.post("/api/users", (req, res) => {
@@ -45,6 +60,10 @@ server.post("/api/users", (req, res) => {
 // DELETE USER
 server.delete("/api/users/:id", (req, res) => {
   const userId = req.params.id;
+  if (!userId) {
+      console.log("No user with that ID.");
+      return res.status(404).json({ errorMessage: "The user with the specified ID does not exist." })
+  }
   db.remove(userId)
     .then(deleted => {
       res.status(204).end();
