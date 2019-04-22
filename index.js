@@ -32,11 +32,23 @@ server.post("/api/users", (req, res) => {
       res.status(201).json(user);
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          error: "There was an error while saving the user to the database"
-        });
+      res.status(500).json({
+        error: "There was an error while saving the user to the database"
+      });
+    });
+});
+
+// DELETE USER
+server.delete("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+  db.remove(userId)
+    .then(deleted => {
+      res.status(204).end();
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: "The user could not be removed"
+      });
     });
 });
 
