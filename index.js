@@ -62,22 +62,57 @@ server.post("/api/users", (req, res) => {
 });
 
 // DELETE USER
+
+/*
+// Yasirah's Method - works but maybe extraneous?
+
 server.delete("/api/users/:id", (req, res) => {
   const userId = req.params.id;
-  if (!userId) {
-    console.log("No user with that ID.");
-    return res
-      .status(404)
-      .json({ errorMessage: "The user with the specified ID does not exist." });
-  }
-  db.remove(userId)
-    .then(deleted => {
-      res.status(204).end();
+  db.findById(userId)
+    .then(data => {
+      console.log(data);
+      if (!data) {
+        res
+          .status(404)
+          .json({
+            errorMessage: "The user with the specified ID does not exist."
+          });
+      } else {
+        db.remove(userId)
+          .then(deleted => {
+            console.log("Deleted: ", deleted);
+            res.status(204).end();
+          })
+          .catch(err => {
+            res.status(500).json({ error: "The user could not be removed." });
+          });
+      }
     })
     .catch(err => {
-      res.status(500).json({
-        error: "The user could not be removed."
-      });
+      res
+        .status(404)
+        .json({
+          errorMessage: "Nope! The user with the specified ID does not exist."
+        });
+    });
+});
+
+*/
+// DELETE USER
+server.delete("/api/users/:id", (req, res) => {
+  const userId = req.params.id;
+  db.remove(userId)
+    .then(deletedData => {
+      // if user does not exist in db
+      if (!deletedData) {
+        res.status(404).json({
+          errorMessage: "The user with the specified ID does not exist."
+        });
+      }
+      res.status(204).end(); // .end() sends a response to the client without the data
+    })
+    .catch(err => {
+      res.status(500).json({ error: "The user could not be removed." });
     });
 });
 
@@ -92,18 +127,19 @@ server.put("/api/users/:id", (req, res) => {
   }
   db.update(userId, userInfo)
     .then(user => {
-        // where user does not exist
-        if (!user) {
-            return res
-              .status(404)
-              .json({ errorMessage: "The user with the specified ID does not exist." });
-          }
-      db.findById(userId) })
+      // where user does not exist
+      if (!user) {
+        return res.status(404).json({
+          errorMessage: "The user with the specified ID does not exist."
+        });
+      }
+      db.findById(userId);
+    }) // try user.id
     .then(updatedUserInfo => {
-        res.status(200).json(updatedUserInfo);
+      res.status(200).json(updatedUserInfo);
     })
     .catch(err => {
-        res
+      res
         .status(500)
         .json({ error: "The user information could not be modified." });
     });
