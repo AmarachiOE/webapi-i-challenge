@@ -22,10 +22,14 @@ server.get("/api/users", (req, res) => {
 
 // GET USER BY ID
 
+
 // POST NEW USER
 server.post("/api/users", (req, res) => {
   const userInfo = req.body;
   console.log("Req Body: ", userInfo);
+  if (!userInfo || !userInfo.name || !userInfo.bio ) {
+      return res.status(400).json({ errorMessage: "Please provide name and bio for the user." })
+  }
 
   db.insert(userInfo)
     .then(user => {
@@ -53,5 +57,5 @@ server.delete("/api/users/:id", (req, res) => {
 });
 
 server.listen(5000, () => {
-  console.log("\n*** Hey! Server listening on port 500! ***\n");
+  console.log("\n*** Hey! Server listening on port 5000! ***\n");
 });
