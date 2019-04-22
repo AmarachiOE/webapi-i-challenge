@@ -1,6 +1,6 @@
 // implement your API here
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
 const db = require("./data/db.js");
 const server = express();
 
@@ -25,15 +25,23 @@ server.get("/api/users", (req, res) => {
 // GET USER BY ID
 server.get("/api/users/:id", (req, res) => {
   const userId = req.params.id;
-  if (!userId) {
-    console.log("No user with that ID.");
-    res
-      .status(404)
-      .json({ errorMessage: "The user with the specified ID does not exist." });
-  }
+  //   if (!userId) {
+  //     console.log("No user with that ID.");
+  //     res
+  //       .status(404)
+  //       .json({ errorMessage: "The user with the specified ID does not exist." });
+  //   }
   db.findById(userId)
     .then(user => {
-      res.status(200).json(user);
+      if (!user) {
+        res
+          .status(404)
+          .json({
+            errorMessage: "The user with the specified ID does not exist."
+          });
+      } else {
+        res.status(200).json(user);
+      }
     })
     .catch(err => {
       res
