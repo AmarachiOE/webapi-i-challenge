@@ -25,7 +25,7 @@ server.get("/api/users/:id", (req, res) => {
   const userId = req.params.id;
   if (!userId) {
     console.log("No user with that ID.");
-    return res
+    res
       .status(404)
       .json({ errorMessage: "The user with the specified ID does not exist." });
   }
@@ -102,9 +102,9 @@ server.delete("/api/users/:id", (req, res) => {
 server.delete("/api/users/:id", (req, res) => {
   const userId = req.params.id;
   db.remove(userId)
-    .then(deletedData => {
-      // if user does not exist in db
-      if (!deletedData) {
+    .then(deletedUser => {
+      // where user does not exist in db
+      if (!deletedUser) {
         res.status(404).json({
           errorMessage: "The user with the specified ID does not exist."
         });
@@ -121,7 +121,7 @@ server.put("/api/users/:id", (req, res) => {
   const userId = req.params.id;
   const userInfo = req.body;
   if (!userInfo.name || !userInfo.bio) {
-    return res
+    res
       .status(400)
       .json({ errorMessage: "Please provide name and bio for the user." });
   }
@@ -129,12 +129,12 @@ server.put("/api/users/:id", (req, res) => {
     .then(user => {
       // where user does not exist
       if (!user) {
-        return res.status(404).json({
+        res.status(404).json({
           errorMessage: "The user with the specified ID does not exist."
         });
       }
       db.findById(userId);
-    }) // try user.id
+    }) // user.id also works?
     .then(updatedUserInfo => {
       res.status(200).json(updatedUserInfo);
     })
